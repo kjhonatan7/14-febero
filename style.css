@@ -3,7 +3,7 @@
 
 body {
     margin: 0; padding: 0;
-    /* Degradado un poco más amplio para dar espacio a las fotos */
+    /* Degradado romántico */
     background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
     height: 100vh;
     display: flex; justify-content: center; align-items: center;
@@ -31,7 +31,7 @@ body {
 .container { position: relative; z-index: 10; cursor: pointer; }
 
 .instruction {
-    position: absolute; bottom: -90px; width: 100%; text-align: center;
+    position: absolute; bottom: -80px; width: 100%; text-align: center;
     color: #c0392b; font-family: 'Playfair Display', serif; font-weight: bold;
     font-size: 1.2rem; animation: pulseText 1.5s infinite;
     transition: opacity 0.5s;
@@ -44,17 +44,14 @@ body {
     width: 340px; height: 240px;
     position: relative; transition: transform 0.3s;
 }
-/* Efecto al pasar el mouse por el sobre CERRADO */
-.container:hover .envelope-wrapper:not(.open) { transform: scale(1.05) rotate(2deg); }
-/* Efecto al pasar el mouse por el sobre ABIERTO (más sutil) */
-.container:hover .envelope-wrapper.open { transform: scale(1.01); }
+.container:hover .envelope-wrapper:not(.open) { transform: scale(1.05); }
 
 .envelope { position: relative; width: 100%; height: 100%; }
 
 .back {
     position: absolute; bottom: 0; width: 100%; height: 100%;
     background-color: #d32f2f; border-radius: 0 0 10px 10px; z-index: 1;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .front {
@@ -69,8 +66,7 @@ body {
     border-style: solid; border-width: 130px 170px 0 170px;
     border-color: #d32f2f transparent transparent transparent;
     z-index: 11; transform-origin: top;
-    /* Física de rebote para la solapa también */
-    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), z-index 0.2s 0.8s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.6s;
 }
 .envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
 
@@ -84,83 +80,72 @@ body {
 }
 .envelope-wrapper.open .seal { opacity: 0; transition: opacity 0.3s; }
 
-/* --- LA CARTA (CENTRAL) --- */
+/* --- LA CARTA --- */
 .card {
     position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 300px; height: 200px;
-    background-color: #fffcf2;
-    border-radius: 4px; 
-    z-index: 5; /* Inicialmente dentro */
-    /* Física de rebote elástico para la carta */
-    transition: bottom 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
-    padding: 12px;
+    background-color: #fffcf2; /* Crema */
+    border-radius: 4px; z-index: 5;
+    /* Efecto rebote al subir */
+    transition: bottom 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.6s;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    padding: 10px;
 }
-/* Z-INDEX 12: La carta queda por encima de las fotos en reposo (z-index 11) */
+/* Al abrirse, sube: */
 .envelope-wrapper.open .card { bottom: 140px; z-index: 12; }
 
 .card-border {
     border: 2px solid #b71c1c; outline: 1px solid #b71c1c; outline-offset: -6px;
     height: 100%; width: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 10px 20px;
+    text-align: center; padding: 10px;
 }
 .title {
     font-family: 'Playfair Display', serif; color: #b71c1c;
-    font-size: 24px; margin: 5px 0; text-transform: uppercase; letter-spacing: 1px;
+    font-size: 22px; margin: 0; text-transform: uppercase;
 }
 .message {
-    font-family: 'Lora', serif; font-size: 16px; color: #333;
-    line-height: 1.5; margin: 15px 0; font-weight: 500;
+    font-family: 'Lora', serif; font-size: 15px; color: #4a4a4a;
+    line-height: 1.4; margin: 10px 0;
 }
 .signature {
-    font-family: 'Playfair Display', serif; font-size: 15px;
+    font-family: 'Playfair Display', serif; font-size: 14px;
     color: #b71c1c; font-weight: bold; margin-top: auto;
 }
-.decoration { color: #d4af37; font-size: 16px; margin: 0 8px; }
 
-/* --- FOTOS POLAROID (MEJORADAS) --- */
+/* --- FOTOS POLAROID --- */
 .polaroid {
     position: absolute; bottom: 0; left: 50%;
-    transform: translate(-50%, 0) scale(0) rotate(0deg); /* Empiezan pequeñas y rectas */
-    /* TAMAÑO MÁS GRANDE */
-    width: 130px; height: 160px;
+    transform: translate(-50%, 0) scale(0);
+    width: 120px; height: 150px; /* Tamaño decente */
     background-color: #fff; padding: 6px 6px 25px 6px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
     z-index: 4; 
-    /* FÍSICA DE RESORTE: Salen disparadas y rebotan */
+    /* Física de resorte */
     transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.polaroid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #f0f0f0; }
+.polaroid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; }
 
-/* ANIMACIÓN AL ABRIR: Se mueven MUCHO más lejos para no tapar la carta */
-
-/* Foto Izquierda */
+/* ANIMACIÓN EN PC (HORIZONTALES) */
 .envelope-wrapper.open .p1 {
-    /* Se mueve 320px a la izquierda y sube */
-    transform: translate(-320px, -120px) rotate(-20deg) scale(1);
-    transition-delay: 0.7s; z-index: 11;
-}
-/* Foto Derecha */
-.envelope-wrapper.open .p2 {
-    /* Se mueve 320px a la derecha y sube */
-    transform: translate(200px, -140px) rotate(15deg) scale(1);
+    transform: translate(-280px, -100px) rotate(-15deg) scale(1);
     transition-delay: 0.8s; z-index: 11;
 }
-/* Foto Arriba */
+.envelope-wrapper.open .p2 {
+    transform: translate(160px, -120px) rotate(15deg) scale(1);
+    transition-delay: 1s; z-index: 11;
+}
 .envelope-wrapper.open .p3 {
-    /* Sube mucho más alto (400px) */
-    transform: translate(-50%, -400px) rotate(5deg) scale(1);
-    transition-delay: 0.9s; z-index: 11;
+    transform: translate(-50%, -300px) rotate(5deg) scale(1);
+    transition-delay: 1.2s; z-index: 11;
 }
 
-/* EFECTO ZOOM HOVER (GIGANTE) */
+/* Efecto Zoom Hover */
 .polaroid:hover {
-    /* Se hacen mucho más grandes y rectas para verlas bien */
-    transform: translate(var(--tx, -50%), var(--ty, -200px)) scale(3) rotate(0deg) !important;
-    z-index: 100 !important; /* Siempre encima de TODO */
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-    transition: transform 0.4s ease-out; /* Zoom suave */
+    transform: translate(var(--tx, -50%), -100px) scale(2.5) rotate(0deg) !important;
+    z-index: 100 !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
     cursor: zoom-in;
 }
 
@@ -168,5 +153,33 @@ body {
 .confetti {
     position: absolute; width: 10px; height: 10px;
     background-color: #f00; pointer-events: none; z-index: 99;
-    border-radius: 2px;
+}
+
+/* =========================================
+   VERSIÓN MÓVIL (CORRECCIONES)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    .container { transform: scale(0.85); top: 50px; }
+    
+    /* En móvil, la carta sube menos para dejar espacio arriba a las fotos */
+    .envelope-wrapper.open .card { bottom: 100px; z-index: 15; }
+
+    /* COREOGRAFÍA VERTICAL (ARCO DE FOTOS) */
+    .envelope-wrapper.open .p1 {
+        transform: translate(-100px, -240px) rotate(-10deg) scale(0.9);
+        transition-delay: 0.6s; z-index: 10;
+    }
+    .envelope-wrapper.open .p2 {
+        transform: translate(100px, -240px) rotate(10deg) scale(0.9);
+        transition-delay: 0.7s; z-index: 10;
+    }
+    .envelope-wrapper.open .p3 {
+        transform: translate(-50%, -320px) rotate(0deg) scale(0.9);
+        transition-delay: 0.8s; z-index: 10;
+    }
+    
+    /* Ajuste de zoom en móvil para que no se salga de pantalla */
+    .polaroid:hover, .polaroid:active {
+        transform: translate(var(--tx, -50%), -200px) scale(1.5) rotate(0deg) !important;
+    }
 }
