@@ -1,88 +1,79 @@
-/* --- CONFIGURACIÓN GENERAL --- */
+/* --- RESET --- */
 html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
+    height: 100%; width: 100%;
+    margin: 0; padding: 0;
     overflow: hidden;
     background: #000;
     background: radial-gradient(circle at center, #222 0%, #000 100%);
     font-family: 'Segoe UI', sans-serif;
     touch-action: none; 
-    
-    /* CENTRADO FLEXBOX PERFECTO */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    perspective: 1000px; /* Profundidad de cámara */
-    transform-style: preserve-3d;
 }
 
-/* --- TÍTULO (Flotante) --- */
+/* --- TÍTULO --- */
 .header {
-    position: absolute; top: 10%; width: 100%; text-align: center; color: #fff;
-    pointer-events: none; z-index: 100;
+    position: absolute; top: 30px; left: 0; width: 100%; 
+    text-align: center; color: #fff; pointer-events: none; z-index: 1000;
 }
-.header h1 { margin: 0; font-size: 2.5rem; text-shadow: 0 0 10px #ff0055; letter-spacing: 2px;}
-.header p { font-size: 1rem; color: #aaa; margin-top: 5px; }
+.header h1 { margin: 0; font-size: 2rem; text-shadow: 0 0 10px #ff0055;}
+.header p { font-size: 0.9rem; color: #aaa; margin: 5px 0 0 0; }
 
-/* --- CONTENEDOR 3D (PUNTO CERO) --- */
+/* --- CONTENEDOR 3D (CENTRADO ABSOLUTO) --- */
 #drag-container {
-    position: relative;
-    display: flex;
-    margin: auto;
+    position: absolute; 
+    /* EL CENTRO EXACTO DE LA PANTALLA */
+    top: 50%; 
+    left: 50%; 
+    /* Esto mueve el punto de pivote al centro del div */
+    transform: translate(-50%, -50%);
+    
+    perspective: 1000px;
     transform-style: preserve-3d;
-    transform: rotateX(-10deg);
 }
 
 #spin-container {
     position: relative;
-    display: flex;
-    /* TRUCO MAESTRO: Tamaño 0 para que el eje sea el centro exacto */
-    width: 0px; 
-    height: 0px; 
+    /* Tamaño 0 para que el eje sea el centro */
+    width: 0; height: 0; 
     transform-style: preserve-3d;
+    /* Rotación inicial para verlo un poco desde arriba */
+    transform: rotateX(-10deg);
 }
 
 /* --- LAS FOTOS --- */
 #spin-container img {
-    transform-style: preserve-3d;
     position: absolute;
-    left: 0; top: 0;
+    /* TAMAÑO DE FOTO */
+    width: 150px; height: 210px;
     
-    /* TAMAÑO REAL DE LA FOTO */
-    width: 170px; 
-    height: 240px;
+    /* CENTRADO MATEMÁTICO: Restamos la mitad del tamaño */
+    left: 50%; top: 50%;
+    margin-left: -75px; /* -150/2 */
+    margin-top: -105px; /* -210/2 */
     
-    /* CENTRADO ABSOLUTO: Movemos la foto la mitad de su tamaño a la izquierda y arriba */
-    /* 170 / 2 = 85px  |  240 / 2 = 120px */
-    margin-left: -85px;
-    margin-top: -120px;
-    
-    object-fit: cover; 
+    transform-style: preserve-3d;
+    object-fit: cover;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    border: 5px solid rgba(255,255,255,0.9);
-    border-radius: 10px;
-    
-    /* Reflejo */
-    -webkit-box-reflect: below 15px linear-gradient(transparent, transparent, #0005);
-    
+    border: 3px solid rgba(255,255,255,0.9);
+    border-radius: 8px;
+    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
     cursor: pointer;
     transition: filter 0.3s, transform 0.3s;
 }
 
 #spin-container img:hover {
     filter: brightness(1.2);
-    border-color: #ff0055;
     box-shadow: 0 0 25px #ff0055;
-    transform: scale(1.05) translateZ(0px); /* Quitamos translateZ extra para no romper el eje */
+    border-color: #ff0055;
+    transform: scale(1.1) translateZ(0); /* Zoom sutil */
 }
 
 /* --- BASE/SUELO --- */
 #ground {
     width: 900px; height: 900px;
-    position: absolute; top: 100%; left: 50%;
-    transform: translate(-50%, -50%) rotateX(90deg);
+    position: absolute; 
+    top: 50%; left: 50%;
+    /* Mover al centro y rotar */
+    transform: translate(-50%, -50%) rotateX(90deg) translateZ(-150px); 
     background: radial-gradient(center center, farthest-side, rgba(255, 0, 85, 0.15), transparent);
 }
 
@@ -91,14 +82,10 @@ html, body {
     position: absolute;
     top: 100%; left: 50%;
     transform: translate(-50%, -50%) rotateX(90deg);
-    color: #ff0055;
-    opacity: 0.3;
-    margin: 0;
-    /* Ajuste fino para centrar el corazón en el piso */
-    margin-top: 150px; 
+    color: #ff0055; opacity: 0.3; margin: 0;
+    margin-top: 150px; /* Bajar el corazón al suelo */
     animation: pulse 2s infinite;
 }
-
 @keyframes pulse { 50% { opacity: 0.6; transform: translate(-50%, -50%) rotateX(90deg) scale(1.1); }}
 
 /* --- LIGHTBOX --- */
@@ -106,27 +93,16 @@ html, body {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.95); display: flex;
     justify-content: center; align-items: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    z-index: 1000;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 2000;
 }
 #lightbox.active { opacity: 1; pointer-events: all; }
 #lightbox img {
     max-width: 90%; max-height: 85%;
-    border: 4px solid #fff;
-    box-shadow: 0 0 40px rgba(255, 0, 85, 0.6);
-    transform: scale(0.8); transition: transform 0.3s;
-    border-radius: 8px;
+    border: 4px solid #fff; box-shadow: 0 0 40px rgba(255, 0, 85, 0.6);
+    transform: scale(0.8); transition: transform 0.3s; border-radius: 8px;
 }
 #lightbox.active img { transform: scale(1); }
 #close-btn {
     position: absolute; top: 30px; right: 30px;
     color: #fff; font-size: 50px; cursor: pointer; font-weight: bold;
-}
-
-/* --- MÓVIL --- */
-@media screen and (max-width: 768px) {
-    #drag-container {
-        /* En móvil alejamos un poco para que quepa todo */
-        transform: rotateX(-20deg) scale(0.7); 
-    }
 }
