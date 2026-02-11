@@ -1,0 +1,210 @@
+/* --- CONFIGURACIÓN GENERAL --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fad0c4 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* --- FONDO ANIMADO --- */
+#bg-hearts {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.floating-heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6);
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+    20% { opacity: 0.8; }
+    100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.container {
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.instruction {
+    position: absolute;
+    bottom: -60px;
+    width: 100%;
+    text-align: center;
+    color: #c0392b;
+    font-family: 'Pacifico', cursive;
+    font-size: 1.2rem;
+    animation: pulseText 1.5s infinite;
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.envelope-wrapper.open ~ .instruction {
+    opacity: 0;
+}
+
+@keyframes pulseText { 50% { transform: scale(1.1); } }
+
+/* --- EL SOBRE --- */
+.envelope-wrapper {
+    width: 300px;
+    height: 200px;
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.container:hover .envelope-wrapper {
+    transform: scale(1.05);
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.back {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #c0392b; /* Rojo oscuro */
+    border-radius: 0 0 10px 10px;
+    z-index: 1;
+}
+
+.front {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 150px 120px 150px;
+    border-color: transparent transparent #e74c3c transparent; /* Rojo brillante */
+    z-index: 10;
+    filter: drop-shadow(0 -5px 5px rgba(0,0,0,0.1));
+}
+
+/* La solapa superior */
+.flap {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 110px 150px 0 150px;
+    border-color: #c0392b transparent transparent transparent;
+    z-index: 11;
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.6s;
+}
+
+.envelope-wrapper.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+/* --- SELLO DE LACRE --- */
+.seal {
+    position: absolute;
+    bottom: 20px; /* Posición relativa al triángulo del flap */
+    left: -25px; /* Centrado (50px ancho / 2) */
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #e67e22 10%, #d35400 90%);
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #943118;
+    z-index: 20;
+}
+
+.envelope-wrapper.open .seal {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* --- LA CARTA --- */
+.card {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    height: 180px;
+    background: #fff;
+    border-radius: 5px;
+    z-index: 5;
+    transition: bottom 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.6s; /* Efecto rebote */
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.envelope-wrapper.open .card {
+    bottom: 150px;
+    z-index: 12;
+}
+
+/* Contenido de la carta */
+.heart-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    animation: heartBeat 1.5s infinite;
+}
+
+.title {
+    font-family: 'Pacifico', cursive;
+    color: #e74c3c;
+    font-size: 22px;
+    margin: 0;
+}
+
+.message {
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    color: #555;
+    line-height: 1.4;
+    margin: 10px 0;
+}
+
+.signature {
+    font-family: 'Dancing Script', cursive;
+    font-size: 16px;
+    color: #e74c3c;
+    margin-top: auto;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* --- CONFETI (Estilos base) --- */
+.confetti {
+    position: absolute;
+    width: 10px; height: 10px;
+    background-color: #f00;
+    pointer-events: none;
+    z-index: 100;
+}
