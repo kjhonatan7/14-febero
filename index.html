@@ -3,58 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Nuestros Momentos</title>
+    <title>Galería 3D Interactiva</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="header">
-        <h1>Nuestra Historia</h1>
-        <p>Gira el mundo contigo ❤️</p>
+        <h1>Nuestros Momentos</h1>
+        <p>Arrastra para girar • Toca para ver</p>
     </div>
 
     <div class="container">
-        <div class="carousel">
+        <div class="carousel" id="carousel">
             
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1516575334481-f85287c2c81d?w=500&q=80" alt="">
-                <div class="reflection"></div>
-            </div>
-            
-            <div class="panel">
-                <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1516575334481-f85287c2c81d?w=500&q=80" alt="Recuerdo 1">
             </div>
             
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1621624666561-84d0ce8891be?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500&q=80" alt="Recuerdo 2">
+            </div>
+            
+            <div class="panel">
+                <img src="https://images.unsplash.com/photo-1621624666561-84d0ce8891be?w=500&q=80" alt="Recuerdo 3">
             </div>
 
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80" alt="Recuerdo 4">
             </div>
 
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80" alt="Recuerdo 5">
             </div>
 
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&q=80" alt="Recuerdo 6">
             </div>
 
             <div class="panel">
-                <img src="https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=500&q=80" alt="">
-                <div class="reflection"></div>
+                <img src="https://images.unsplash.com/photo-1524638431109-93d95c968f03?w=500&q=80" alt="Recuerdo 7">
             </div>
 
         </div>
     </div>
 
-    <div class="lights"></div>
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn">&times;</span>
+        <img id="lightbox-img" src="" alt="Zoom">
+    </div>
 
     <script src="script.js"></script>
 </body>
