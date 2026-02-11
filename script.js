@@ -1,39 +1,98 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Crear estrellas de fondo
-    const body = document.body;
-    const starCount = 100;
+    const carousel = document.getElementById('carousel');
+    const panels = document.querySelectorAll('.panel');
+    const n = panels.length;
+    const angleStep = 360 / n;
+    
+    // Distancia del centro (Radio del carrusel)
+    // Ajustar si agregas más fotos: más fotos = número más grande
+    const radius = 320; 
 
-    for (let i = 0; i < starCount; i++) {
-        const star = document.createElement('div');
-        star.style.position = 'absolute';
-        star.style.width = '2px';
-        star.style.height = '2px';
-        star.style.background = 'white';
-        star.style.borderRadius = '50%';
+    // 1. POSICIONAR PANELES EN 3D
+    panels.forEach((panel, i) => {
+        const angle = angleStep * i;
+        // Rotamos y empujamos hacia afuera
+        panel.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
         
-        // Posición aleatoria
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
+        // Guardar el ángulo original para referencias
+        panel.dataset.angle = angle;
         
-        star.style.left = x + '%';
-        star.style.top = y + '%';
-        
-        // Brillo aleatorio
-        const duration = Math.random() * 3 + 2;
-        star.style.animation = `twinkle ${duration}s infinite ease-in-out`;
-        star.style.opacity = Math.random();
+        // Evento Click para Zoom
+        panel.addEventListener('click', () => {
+            // Solo abrir si NO se está arrastrando
+            if (!isDragging) {
+                openLightbox(panel.querySelector('img').src);
+            }
+        });
+    });
 
-        body.appendChild(star);
+    // 2. LOGICA DE ARRASTRE (DRAG & SWIPE)
+    let currentAngle = 0;
+    let startX = 0;
+    let isDown = false;
+    let isDragging = false; // Diferencia entre click y drag
+
+    // Eventos Mouse y Touch unificados
+    const startInteraction = (x) => {
+        isDown = true;
+        isDragging = false;
+        startX = x;
+        carousel.style.transition = 'none'; // Quitamos transición para respuesta instantánea
+    };
+
+    const moveInteraction = (x) => {
+        if (!isDown) return;
+        
+        const xDiff = x - startX;
+        
+        // Si se mueve más de 5px, lo consideramos arrastre (no click)
+        if (Math.abs(xDiff) > 5) isDragging = true;
+
+        // Rotar: Dividimos por 5 para controlar la sensibilidad
+        const newAngle = currentAngle + (xDiff / 5);
+        carousel.style.transform = `rotateY(${newAngle}deg)`;
+    };
+
+    const endInteraction = (x) => {
+        if (!isDown) return;
+        isDown = false;
+        
+        const xDiff = x - startX;
+        currentAngle += (xDiff / 5); // Guardamos la nueva posición
+        
+        // Volvemos a poner la transición suave para inercia futura (opcional)
+        carousel.style.transition = 'transform 0.5s ease-out';
+        carousel.style.transform = `rotateY(${currentAngle}deg)`;
+    };
+
+    // Listeners Mouse
+    document.addEventListener('mousedown', (e) => startInteraction(e.clientX));
+    document.addEventListener('mousemove', (e) => moveInteraction(e.clientX));
+    document.addEventListener('mouseup', (e) => endInteraction(e.clientX));
+
+    // Listeners Touch (Celulares)
+    document.addEventListener('touchstart', (e) => startInteraction(e.touches[0].clientX));
+    document.addEventListener('touchmove', (e) => moveInteraction(e.touches[0].clientX));
+    document.addEventListener('touchend', (e) => endInteraction(e.changedTouches[0].clientX));
+
+
+    // 3. LOGICA DEL LIGHTBOX (ZOOM)
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.querySelector('.close-btn');
+
+    function openLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.classList.add('active');
     }
 
-    // Agregar estilo de animación dinámicamente
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.5); }
-        }
-    `;
-    document.head.appendChild(style);
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        if (e.target !== lightboxImg) closeLightbox();
+    });
 });
