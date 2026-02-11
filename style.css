@@ -1,179 +1,149 @@
-/* --- CONFIGURACIÓN GENERAL --- */
-* { box-sizing: border-box; }
-
+/* --- CONFIGURACIÓN DARK MODE --- */
 body {
-    margin: 0; padding: 0;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
-    /* Usamos min-height en vez de height fijo para permitir scroll si hace falta en móviles muy pequeños */
-    min-height: 100vh; 
-    display: flex; justify-content: center; align-items: center;
-    overflow-x: hidden; /* Evitar scroll horizontal */
-    font-family: 'Lora', serif;
+    margin: 0;
+    padding: 0;
+    background: #000; /* Fondo Negro Profundo */
+    background: radial-gradient(circle at center, #2b1055 0%, #000000 100%);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    perspective: 1000px; /* Profundidad 3D vital */
 }
 
-/* --- FONDO ANIMADO --- */
-#bg-hearts {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
-}
-.floating-heart {
-    position: absolute; opacity: 0.5;
-    animation: floatUp linear infinite;
-    color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5);
-}
-@keyframes floatUp {
-    0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-    20% { opacity: 0.8; }
-    100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; }
-}
-
-/* --- CONTENEDOR PRINCIPAL --- */
-.container { position: relative; z-index: 10; cursor: pointer; padding-bottom: 50px; }
-
-.instruction {
-    position: absolute; bottom: -60px; width: 100%; text-align: center;
-    color: #c0392b; font-family: 'Playfair Display', serif; font-weight: bold;
-    font-size: 1.2rem; animation: pulseText 1.5s infinite;
-    transition: opacity 0.5s;
-}
-.envelope-wrapper.open ~ .instruction { opacity: 0; }
-@keyframes pulseText { 50% { transform: scale(1.1); } }
-
-/* --- EL SOBRE --- */
-.envelope-wrapper {
-    width: 340px; height: 240px;
-    position: relative; transition: transform 0.3s;
-}
-.container:hover .envelope-wrapper:not(.open) { transform: scale(1.05); }
-
-.envelope { position: relative; width: 100%; height: 100%; }
-
-.back {
-    position: absolute; bottom: 0; width: 100%; height: 100%;
-    background-color: #d32f2f; border-radius: 0 0 10px 10px; z-index: 1;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.front {
-    position: absolute; bottom: 0; left: 0; width: 0; height: 0;
-    border-style: solid; border-width: 0 170px 140px 170px;
-    border-color: transparent transparent #e53935 transparent;
+/* --- TÍTULO NEON --- */
+.header {
+    position: absolute;
+    top: 5%;
+    text-align: center;
     z-index: 10;
+    width: 100%;
 }
 
-.flap {
-    position: absolute; top: 0; left: 0; width: 0; height: 0;
-    border-style: solid; border-width: 130px 170px 0 170px;
-    border-color: #d32f2f transparent transparent transparent;
-    z-index: 11; transform-origin: top;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.6s;
-}
-.envelope-wrapper.open .flap { transform: rotateX(180deg); z-index: 1; }
-
-.seal {
-    position: absolute; bottom: 30px; left: -25px;
-    width: 50px; height: 50px; border-radius: 50%;
-    background: radial-gradient(circle, #e67e22 10%, #d35400 90%);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 24px; color: #943118; z-index: 20; border: 2px solid #c0392b;
-}
-.envelope-wrapper.open .seal { opacity: 0; transition: opacity 0.3s; }
-
-/* --- LA CARTA --- */
-.card {
-    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 300px; height: 200px;
-    background-color: #fffcf2; border-radius: 4px; z-index: 5;
-    transition: bottom 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.6s;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1); padding: 10px;
-}
-/* Posición abierta en PC */
-.envelope-wrapper.open .card { bottom: 140px; z-index: 12; }
-
-.card-border {
-    border: 2px solid #b71c1c; outline: 1px solid #b71c1c; outline-offset: -6px;
-    height: 100%; width: 100%;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 10px;
-}
-.title {
-    font-family: 'Playfair Display', serif; color: #b71c1c;
-    font-size: 22px; margin: 0; text-transform: uppercase;
-}
-.message {
-    font-family: 'Lora', serif; font-size: 15px; color: #4a4a4a;
-    line-height: 1.4; margin: 10px 0;
-}
-.signature {
-    font-family: 'Playfair Display', serif; font-size: 14px;
-    color: #b71c1c; font-weight: bold; margin-top: auto;
-}
-.decoration { color: #d4af37; font-size: 16px; margin: 0 5px; }
-
-/* --- FOTOS POLAROID --- */
-.polaroid {
-    position: absolute; bottom: 0; left: 50%;
-    transform: translate(-50%, 0) scale(0);
-    width: 120px; height: 150px;
-    background-color: #fff; padding: 6px 6px 25px 6px;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-    z-index: 4; transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.polaroid img { width: 100%; height: 100%; object-fit: cover; border: 1px solid #eee; }
-
-/* ANIMACIÓN EN PC (HORIZONTALES) */
-.envelope-wrapper.open .p1 { transform: translate(-280px, -100px) rotate(-15deg) scale(1); transition-delay: 0.8s; z-index: 11; }
-.envelope-wrapper.open .p2 { transform: translate(160px, -120px) rotate(15deg) scale(1); transition-delay: 1s; z-index: 11; }
-.envelope-wrapper.open .p3 { transform: translate(-50%, -300px) rotate(5deg) scale(1); transition-delay: 1.2s; z-index: 11; }
-
-/* Efecto Zoom Hover en PC */
-.polaroid:hover {
-    transform: translate(var(--tx, -50%), -100px) scale(2.5) rotate(0deg) !important;
-    z-index: 100 !important; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease; cursor: zoom-in;
+.header h1 {
+    color: #fff;
+    font-size: 2.5rem;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de; /* Brillo Neon Rosa */
+    animation: flicker 3s infinite alternate;
 }
 
-/* --- CONFETI --- */
-.confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; pointer-events: none; z-index: 99; }
+.header p {
+    color: #ccc;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
 
-/* =========================================
-   VERSIÓN MÓVIL (ARREGLADA PARA OCUPAR PANTALLA)
-   ========================================= */
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.5; }
+}
+
+/* --- ESCENARIO 3D --- */
+.container {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    transform-style: preserve-3d; /* Permite que los hijos sean 3D */
+    transform: rotateX(-10deg); /* Inclinamos un poco la cámara hacia arriba */
+}
+
+.carousel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    animation: spin 25s linear infinite; /* Gira eternamente */
+}
+
+/* Pausar al pasar el mouse */
+.container:hover .carousel {
+    animation-play-state: paused;
+}
+
+/* --- LAS FOTOS (PANELES) --- */
+.panel {
+    position: absolute;
+    width: 190px;
+    height: 280px;
+    left: 10px;
+    top: 10px;
+    /* Borde brillante */
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(255, 0, 222, 0.5); 
+    background: rgba(0,0,0,0.8);
+    /* Aquí distribuimos las fotos en círculo mediante cálculo matemático */
+    /* 360 grados / 7 fotos ≈ 51.4 grados por foto */
+    /* TranslateZ empuja las fotos hacia afuera del centro */
+}
+
+/* APLICAMOS LAS ROTACIONES A CADA FOTO */
+.panel:nth-child(1) { transform: rotateY(0deg) translateZ(350px); }
+.panel:nth-child(2) { transform: rotateY(51.4deg) translateZ(350px); }
+.panel:nth-child(3) { transform: rotateY(102.8deg) translateZ(350px); }
+.panel:nth-child(4) { transform: rotateY(154.2deg) translateZ(350px); }
+.panel:nth-child(5) { transform: rotateY(205.6deg) translateZ(350px); }
+.panel:nth-child(6) { transform: rotateY(257deg) translateZ(350px); }
+.panel:nth-child(7) { transform: rotateY(308.4deg) translateZ(350px); }
+
+.panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(20%) brightness(0.8); /* Efecto cinemático */
+    transition: all 0.5s;
+}
+
+/* Efecto al pasar mouse sobre una foto específica */
+.panel:hover img {
+    filter: sepia(0%) brightness(1.2); /* Se ilumina */
+    transform: scale(1.1);
+}
+
+/* --- REFLEJO EN EL PISO (Efecto Premium) --- */
+.reflection {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 100%; /* Justo debajo de la foto */
+    left: 0;
+    background: inherit;
+    transform: scaleY(-1); /* Invertir verticalmente */
+    opacity: 0.3;
+    /* Máscara de desvanecimiento */
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    mask-image: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    pointer-events: none;
+}
+
+/* --- ANIMACIÓN DE GIRO --- */
+@keyframes spin {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+
+/* --- LUCES DE FONDO --- */
+.lights {
+    position: absolute;
+    width: 100%; height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(76, 29, 149, 0.4), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255, 0, 150, 0.2), transparent 30%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* --- CELULAR (RESPONSIVE) --- */
 @media screen and (max-width: 768px) {
-    /* Hacemos el contenedor un poco más chico para asegurar márgenes */
-    .container { transform: scale(0.9); }
-
-    /* 1. LA CARTA SUBE MUCHO MÁS AL ABRIR */
-    /* Se va casi al tope de la pantalla para leerse completa */
-    .envelope-wrapper.open .card {
-        bottom: 280px; /* Posición muy alta */
-        z-index: 30; /* Aseguramos que esté encima de TODO */
+    .container {
+        /* Alejamos el carrusel en móviles para que quepa */
+        transform: rotateX(-10deg) scale(0.6); 
     }
-
-    /* 2. LAS FOTOS BAJAN Y SE ABREN EN ABANICO INFERIOR */
-    /* En vez de subir, se quedan abajo, esparcidas para no tapar la carta */
-    
-    /* Foto Izquierda Abajo */
-    .envelope-wrapper.open .p1 {
-        transform: translate(-90px, 80px) rotate(-15deg) scale(0.85);
-        z-index: 20; transition-delay: 0.6s;
-    }
-    /* Foto Derecha Abajo */
-    .envelope-wrapper.open .p2 {
-        transform: translate(90px, 60px) rotate(15deg) scale(0.85);
-        z-index: 21; transition-delay: 0.7s;
-    }
-    /* Foto Centro Más Abajo */
-    .envelope-wrapper.open .p3 {
-        transform: translate(-50%, 120px) rotate(5deg) scale(0.85);
-        z-index: 22; transition-delay: 0.8s;
-    }
-    
-    /* Ajuste de zoom táctil en móvil para que no rompa la pantalla */
-    .polaroid:hover, .polaroid:active {
-        /* Al tocar, sube un poco y se agranda moderadamente */
-        transform: translate(var(--tx, -50%), -100px) scale(1.6) rotate(0deg) !important;
-        z-index: 50 !important;
-    }
+    .header { top: 10%; }
+    .header h1 { font-size: 1.8rem; }
 }
