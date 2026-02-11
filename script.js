@@ -1,15 +1,14 @@
 // --- CONFIGURACIÓN ---
-const radius = 240; // Radio del carrusel (qué tan abierto es el círculo)
-const autoRotateSpeed = 0.3; // Velocidad automática (grados por frame)
-const dragFactor = 0.2; // Sensibilidad del tacto (más alto = más rápido)
+const radius = 240; // Radio del círculo
+const autoRotateSpeed = 0.5; // Velocidad de giro automático
 
-// --- VARIABLES INTERNAS ---
+// --- INICIALIZACIÓN ---
 const odrag = document.getElementById('drag-container');
 const ospin = document.getElementById('spin-container');
 const aImg = ospin.getElementsByTagName('img');
-const aEle = [...aImg]; // Convertir a array
+const aEle = [...aImg];
 
-// Ajustar tamaño del contenedor
+// Tamaño del contenedor
 ospin.style.width = aImg[0].width + "px";
 ospin.style.height = aImg[0].height + "px";
 
@@ -18,132 +17,91 @@ const ground = document.getElementById('ground');
 ground.style.width = radius * 3 + "px";
 ground.style.height = radius * 3 + "px";
 
-// --- 1. POSICIONAMIENTO INICIAL ---
 function init(delayTime) {
     for (let i = 0; i < aEle.length; i++) {
-        // Calcular ángulo para cada foto
         aEle[i].style.transform = `rotateY(${i * (360 / aEle.length)}deg) translateZ(${radius}px)`;
         aEle[i].style.transition = "transform 1s";
         aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 4 + "s";
         
-        // Evento Click para Zoom
+        // Click para Zoom
         aEle[i].addEventListener('click', function(e) {
-            // Solo abrir si no se está arrastrando mucho
-            if(Math.abs(desX) < 5 && Math.abs(desY) < 5) {
+            // Solo abre si no estamos arrastrando
+            if (Math.abs(desX) < 5 && Math.abs(desY) < 5) {
                 openLightbox(this.src);
             }
         });
     }
 }
 
-// Iniciar con animación de entrada
 setTimeout(init, 1000);
 
+// --- MOTOR DE ANIMACIÓN ---
+let desX = 0, desY = 0;
+let tX = 0, tY = 10;
+let autoSpin = true; // Empieza girando solo
 
-// --- 2. MOTOR DE FÍSICA (Auto + Manual) ---
-let count = 0; // Grados actuales
-let desX = 0;
-let desY = 0;
-let tX = 0;
-let tY = 10; // Ángulo vertical inicial
-
-// Variables para el ciclo de animación
-let autoSpin = true;
-let isDragging = false;
-
-// Esta función se ejecuta 60 veces por segundo
 function animate() {
-    
-    if (isDragging) {
-        // SI ARRASTRAS: No hacemos nada automático, el evento mousemove controla 'tY'
-        // Pero aplicamos un poco de fricción a la velocidad (desX) para que no se dispare
-        desX *= 0.95;
-        desY *= 0.95;
-    } else {
-        // SI NO ARRASTRAS:
-        
-        // 1. Efecto Inercia (frenado suave después de soltar)
+    // Si NO estamos arrastrando, giramos solo o frenamos la inercia
+    if(autoSpin) {
         if (Math.abs(desX) > 0.5) {
-            tY += desX * 0.5; // Seguir girando con el impulso
-            desX *= 0.92; // Fricción (frenado)
+            tY += desX * 0.5;
+            desX *= 0.95; // Fricción
         } else {
-            // 2. Auto-Rotación (cuando ya frenó)
             tY += autoRotateSpeed; // Velocidad constante
         }
-        
-        // Suavizado vertical (volver al centro)
-        if (Math.abs(desY) > 0.5) {
-            tX += desY * 0.5;
-            desY *= 0.92;
-        }
+    } else {
+        // Si estamos arrastrando, solo aplicamos fricción a la velocidad para que no se dispare
+        desX *= 0.95; 
     }
 
-    // Aplicar la rotación al contenedor
-    // rotateY controla el giro horizontal (carrusel)
-    // rotateX controla la inclinación vertical (ver desde arriba/abajo)
+    // Aplicar rotación
     odrag.style.transform = `rotateX(${-tX}deg) rotateY(${tY}deg)`;
-
     requestAnimationFrame(animate);
 }
-
-// Arrancar motor
 animate();
 
-
-// --- 3. CONTROL TÁCTIL Y MOUSE ---
+// --- EVENTOS DE ARRASTRE ---
 let sX, sY, nX, nY;
 
-// Función unificada para empezar arrastre
 function startDrag(e) {
-    clearInterval(odrag.timer);
-    // Detectar si es touch o mouse
     e = e || window.event;
     sX = e.clientX || e.touches[0].clientX;
     sY = e.clientY || e.touches[0].clientY;
-    
-    isDragging = true; // Pausar auto-rotación pura
+    autoSpin = false; // Detener auto-giro al tocar
 }
 
-// Función unificada para mover
 function moveDrag(e) {
-    if (!isDragging) return;
+    if (autoSpin) return; // Si no hemos empezado, salir
     
     e = e || window.event;
     nX = e.clientX || e.touches[0].clientX;
     nY = e.clientY || e.touches[0].clientY;
 
-    // Calcular distancia movida y velocidad
-    desX = (nX - sX) * dragFactor;
-    desY = (nY - sY) * dragFactor;
+    desX = (nX - sX) * 0.2; // Velocidad horizontal
+    desY = (nY - sY) * 0.1; // Velocidad vertical (menor para no marear)
 
-    // Actualizar rotación acumulada inmediatamente (respuesta táctil)
-    tY += desX;
-    tX -= desY * 0.5; // Menos movimiento vertical para no marear
+    tY += desX; // Girar
+    tX -= desY; // Inclinar
 
-    // Guardar posición actual para el siguiente frame
     sX = nX;
     sY = nY;
 }
 
-// Función unificada para soltar
 function endDrag(e) {
-    isDragging = false; // Reactivar física (inercia -> auto)
-    // No ponemos desX a 0, dejamos que 'animate' use el último desX para la inercia
+    autoSpin = true; // Volver a activar física al soltar
 }
 
-
-// Eventos Mouse (PC)
+// Mouse
 document.onmousedown = startDrag;
 document.onmousemove = moveDrag;
 document.onmouseup = endDrag;
 
-// Eventos Touch (Móvil)
+// Touch (Celular)
 document.ontouchstart = startDrag;
 document.ontouchmove = moveDrag;
 document.ontouchend = endDrag;
 
-
-// --- 4. LIGHTBOX (ZOOM) ---
+// --- LIGHTBOX ---
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightbox-img');
 const closeBtn = document.getElementById('close-btn');
@@ -151,14 +109,16 @@ const closeBtn = document.getElementById('close-btn');
 function openLightbox(src) {
     lightboxImg.src = src;
     lightbox.classList.add('active');
-    // Pausar interacción mientras se ve la foto
-    isDragging = false; 
+    autoSpin = false; // Pausar giro
 }
 
 closeBtn.onclick = () => {
     lightbox.classList.remove('active');
+    autoSpin = true; // Reanudar
 };
-
 lightbox.onclick = (e) => {
-    if(e.target !== lightboxImg) lightbox.classList.remove('active');
+    if(e.target !== lightboxImg) {
+        lightbox.classList.remove('active');
+        autoSpin = true;
+    }
 }
