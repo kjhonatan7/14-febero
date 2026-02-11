@@ -1,149 +1,94 @@
-/* --- CONFIGURACIÓN DARK MODE --- */
+/* --- CONFIGURACIÓN GENERAL --- */
 body {
-    margin: 0;
-    padding: 0;
-    background: #000; /* Fondo Negro Profundo */
-    background: radial-gradient(circle at center, #2b1055 0%, #000000 100%);
+    margin: 0; padding: 0;
+    background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
     height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
     overflow: hidden;
-    font-family: 'Courier New', Courier, monospace;
-    perspective: 1000px; /* Profundidad 3D vital */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    perspective: 1100px; /* Profundidad de cámara */
 }
 
-/* --- TÍTULO NEON --- */
+/* --- TÍTULO --- */
 .header {
-    position: absolute;
-    top: 5%;
-    text-align: center;
-    z-index: 10;
-    width: 100%;
+    position: absolute; top: 5%; width: 100%; text-align: center; z-index: 10;
+    pointer-events: none; /* Para que no estorbe el click */
 }
-
 .header h1 {
-    color: #fff;
-    font-size: 2.5rem;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de; /* Brillo Neon Rosa */
-    animation: flicker 3s infinite alternate;
+    color: #fff; font-size: 2rem; margin: 0; text-transform: uppercase; letter-spacing: 4px;
+    text-shadow: 0 0 10px #d63384, 0 0 20px #d63384;
 }
-
-.header p {
-    color: #ccc;
-    font-size: 1rem;
-    letter-spacing: 2px;
-}
-
-@keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 24%, 55% { opacity: 0.5; }
-}
+.header p { color: #aaa; font-size: 0.9rem; margin-top: 5px; }
 
 /* --- ESCENARIO 3D --- */
 .container {
     position: relative;
-    width: 200px;
-    height: 300px;
-    transform-style: preserve-3d; /* Permite que los hijos sean 3D */
-    transform: rotateX(-10deg); /* Inclinamos un poco la cámara hacia arriba */
+    width: 210px; height: 300px; /* Tamaño de las cartas */
+    transform-style: preserve-3d;
+    transform: rotateX(-5deg); /* Ligera inclinación */
 }
 
 .carousel {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+    position: absolute; width: 100%; height: 100%;
     transform-style: preserve-3d;
-    animation: spin 25s linear infinite; /* Gira eternamente */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Suavizado al soltar */
+    cursor: grab;
 }
+.carousel:active { cursor: grabbing; }
 
-/* Pausar al pasar el mouse */
-.container:hover .carousel {
-    animation-play-state: paused;
-}
-
-/* --- LAS FOTOS (PANELES) --- */
+/* --- PANELES (FOTOS) --- */
 .panel {
     position: absolute;
-    width: 190px;
-    height: 280px;
-    left: 10px;
-    top: 10px;
-    /* Borde brillante */
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 15px rgba(255, 0, 222, 0.5); 
-    background: rgba(0,0,0,0.8);
-    /* Aquí distribuimos las fotos en círculo mediante cálculo matemático */
-    /* 360 grados / 7 fotos ≈ 51.4 grados por foto */
-    /* TranslateZ empuja las fotos hacia afuera del centro */
+    width: 200px; height: 290px;
+    left: 5px; top: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(214, 51, 132, 0.3);
+    /* No tocamos el transform aquí, lo hace JS */
+    transition: filter 0.3s;
+    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, rgba(0,0,0,0.4));
 }
-
-/* APLICAMOS LAS ROTACIONES A CADA FOTO */
-.panel:nth-child(1) { transform: rotateY(0deg) translateZ(350px); }
-.panel:nth-child(2) { transform: rotateY(51.4deg) translateZ(350px); }
-.panel:nth-child(3) { transform: rotateY(102.8deg) translateZ(350px); }
-.panel:nth-child(4) { transform: rotateY(154.2deg) translateZ(350px); }
-.panel:nth-child(5) { transform: rotateY(205.6deg) translateZ(350px); }
-.panel:nth-child(6) { transform: rotateY(257deg) translateZ(350px); }
-.panel:nth-child(7) { transform: rotateY(308.4deg) translateZ(350px); }
 
 .panel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: sepia(20%) brightness(0.8); /* Efecto cinemático */
-    transition: all 0.5s;
+    width: 100%; height: 100%; object-fit: cover;
+    pointer-events: none; /* Evita arrastrar la imagen fantasma */
 }
 
-/* Efecto al pasar mouse sobre una foto específica */
-.panel:hover img {
-    filter: sepia(0%) brightness(1.2); /* Se ilumina */
-    transform: scale(1.1);
+/* Efecto Hover en PC */
+.panel:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 25px rgba(214, 51, 132, 0.8);
+    border-color: #fff;
 }
 
-/* --- REFLEJO EN EL PISO (Efecto Premium) --- */
-.reflection {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 100%; /* Justo debajo de la foto */
-    left: 0;
-    background: inherit;
-    transform: scaleY(-1); /* Invertir verticalmente */
-    opacity: 0.3;
-    /* Máscara de desvanecimiento */
-    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
-    mask-image: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
-    pointer-events: none;
+/* --- LIGHTBOX (ZOOM) --- */
+.lightbox {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; /* Oculto */
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
-/* --- ANIMACIÓN DE GIRO --- */
-@keyframes spin {
-    from { transform: rotateY(0deg); }
-    to { transform: rotateY(360deg); }
+.lightbox.active {
+    opacity: 1; pointer-events: all; /* Visible */
 }
 
-/* --- LUCES DE FONDO --- */
-.lights {
-    position: absolute;
-    width: 100%; height: 100%;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(76, 29, 149, 0.4), transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(255, 0, 150, 0.2), transparent 30%);
-    z-index: -1;
-    pointer-events: none;
+.lightbox img {
+    max-width: 90%; max-height: 80vh;
+    border: 2px solid #fff;
+    box-shadow: 0 0 50px rgba(255,255,255,0.2);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* --- CELULAR (RESPONSIVE) --- */
-@media screen and (max-width: 768px) {
-    .container {
-        /* Alejamos el carrusel en móviles para que quepa */
-        transform: rotateX(-10deg) scale(0.6); 
-    }
-    .header { top: 10%; }
-    .header h1 { font-size: 1.8rem; }
+.lightbox.active img { transform: scale(1); }
+
+.close-btn {
+    position: absolute; top: 20px; right: 30px;
+    color: #fff; font-size: 40px; cursor: pointer;
+    font-weight: bold;
 }
