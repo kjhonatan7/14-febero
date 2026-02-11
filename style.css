@@ -1,94 +1,105 @@
-/* --- CONFIGURACIÓN GENERAL --- */
-body {
-    margin: 0; padding: 0;
-    background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
-    height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+/* --- RESET Y FONDO --- */
+html, body {
+    height: 100%;
+    margin: 0;
     overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    perspective: 1100px; /* Profundidad de cámara */
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    font-family: 'Segoe UI', sans-serif;
+    touch-action: none; /* Vital para el arrastre en móvil */
 }
 
 /* --- TÍTULO --- */
 .header {
-    position: absolute; top: 5%; width: 100%; text-align: center; z-index: 10;
-    pointer-events: none; /* Para que no estorbe el click */
+    position: absolute; top: 5%; width: 100%; text-align: center; color: #fff;
+    pointer-events: none; z-index: 100;
 }
-.header h1 {
-    color: #fff; font-size: 2rem; margin: 0; text-transform: uppercase; letter-spacing: 4px;
-    text-shadow: 0 0 10px #d63384, 0 0 20px #d63384;
-}
-.header p { color: #aaa; font-size: 0.9rem; margin-top: 5px; }
+.header h1 { margin: 0; font-size: 2rem; text-shadow: 0 0 10px #ff0055; letter-spacing: 2px;}
+.header p { font-size: 0.9rem; color: #aaa; margin-top: 5px; }
 
-/* --- ESCENARIO 3D --- */
-.container {
+/* --- CONTENEDOR 3D --- */
+#drag-container, #spin-container {
     position: relative;
-    width: 210px; height: 300px; /* Tamaño de las cartas */
+    display: flex;
+    margin: auto;
     transform-style: preserve-3d;
-    transform: rotateX(-5deg); /* Ligera inclinación */
+    transform: rotateX(-10deg); /* Perspectiva inicial */
 }
 
-.carousel {
-    position: absolute; width: 100%; height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Suavizado al soltar */
-    cursor: grab;
+#drag-container {
+    top: 15%; /* Posición vertical */
+    perspective: 1000px;
 }
-.carousel:active { cursor: grabbing; }
 
-/* --- PANELES (FOTOS) --- */
-.panel {
+#spin-container {
+    width: 140px; /* TAMAÑO REDUCIDO (Antes 200px) */
+    height: 200px; /* TAMAÑO REDUCIDO (Antes 300px) */
+    animation: spinRevert 20s infinite linear; /* Solo para resetear lógica si falla JS */
+}
+
+/* --- LAS FOTOS --- */
+#spin-container img {
+    transform-style: preserve-3d;
     position: absolute;
-    width: 200px; height: 290px;
-    left: 5px; top: 5px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 15px rgba(214, 51, 132, 0.3);
-    /* No tocamos el transform aquí, lo hace JS */
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    box-shadow: 0 0 8px #fff;
+    border: 3px solid rgba(255,255,255,0.8);
+    /* Reflejo en el piso */
+    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
+    cursor: pointer;
     transition: filter 0.3s;
-    -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, rgba(0,0,0,0.4));
 }
 
-.panel img {
-    width: 100%; height: 100%; object-fit: cover;
-    pointer-events: none; /* Evita arrastrar la imagen fantasma */
-}
-
-/* Efecto Hover en PC */
-.panel:hover {
+#spin-container img:hover {
     filter: brightness(1.2);
-    box-shadow: 0 0 25px rgba(214, 51, 132, 0.8);
-    border-color: #fff;
+    box-shadow: 0 0 15px #ff0055;
+    border-color: #ff0055;
+}
+
+/* --- BASE/SUELO (Decorativo) --- */
+#ground {
+    width: 900px; height: 900px;
+    position: absolute; top: 100%; left: 50%;
+    transform: translate(-50%, -50%) rotateX(90deg);
+    background: radial-gradient(center center, farthest-side, #9993, transparent);
+}
+
+#spin-container p {
+    font-size: 50px;
+    position: absolute;
+    top: 100%; left: 50%;
+    transform: translate(-50%, -50%) rotateX(90deg);
+    color: #ff0055;
+    opacity: 0.5;
+}
+
+/* --- ANIMACIONES DE GIRO --- */
+/* Esta clase se usa en JS para aplicar la rotación calculada */
+@keyframes spin {
+    from{ transform: rotateY(0deg); } to{ transform: rotateY(360deg); }
+}
+@keyframes spinRevert {
+    from{ transform: rotateY(360deg); } to{ transform: rotateY(0deg); }
 }
 
 /* --- LIGHTBOX (ZOOM) --- */
-.lightbox {
+#lightbox {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0,0,0,0.9); display: flex;
+    justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
     z-index: 1000;
-    display: flex; justify-content: center; align-items: center;
-    opacity: 0; pointer-events: none; /* Oculto */
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(10px);
 }
-
-.lightbox.active {
-    opacity: 1; pointer-events: all; /* Visible */
-}
-
-.lightbox img {
-    max-width: 90%; max-height: 80vh;
+#lightbox.active { opacity: 1; pointer-events: all; }
+#lightbox img {
+    max-width: 90%; max-height: 80%;
     border: 2px solid #fff;
-    box-shadow: 0 0 50px rgba(255,255,255,0.2);
-    transform: scale(0.8);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.5);
+    transform: scale(0.8); transition: transform 0.3s;
 }
-
-.lightbox.active img { transform: scale(1); }
-
-.close-btn {
+#lightbox.active img { transform: scale(1); }
+#close-btn {
     position: absolute; top: 20px; right: 30px;
     color: #fff; font-size: 40px; cursor: pointer;
-    font-weight: bold;
 }
