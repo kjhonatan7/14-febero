@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // 1. GENERAR FONDO DE CORAZONES
+    // --- 1. GENERAR FONDO DE CORAZONES ---
     const bgContainer = document.getElementById('bg-hearts');
-    const symbols = ['❤', '❥', '♥', '✨']; // Símbolos más limpios
+    const symbols = ['❤', '❥', '♥', '✨']; 
     const heartCount = 35;
 
     for (let i = 0; i < heartCount; i++) {
@@ -12,14 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         heart.style.left = Math.random() * 100 + 'vw';
         heart.style.fontSize = Math.random() * 15 + 10 + 'px';
-        heart.style.color = '#fff'; // Blancos para contraste suave
         heart.style.animationDuration = Math.random() * 5 + 5 + 's';
         heart.style.animationDelay = Math.random() * 5 + 's';
         
         bgContainer.appendChild(heart);
     }
 
-    // 2. ABRIR EL SOBRE
+    // --- 2. ABRIR EL SOBRE ---
     const container = document.querySelector('.container');
     const envelope = document.getElementById('envelope');
 
@@ -27,14 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!envelope.classList.contains('open')) {
             envelope.classList.add('open');
             
-            // Sonido de "pop" o confeti
+            // Disparar confeti cuando sale la carta
             setTimeout(() => {
                 fireConfetti();
             }, 600);
         }
     });
 
-    // 3. EXPLOSIÓN DE CONFETI
+    // --- 3. EXPLOSIÓN DE CONFETI ---
     function fireConfetti() {
         const colors = ['#d63031', '#fd79a8', '#ffeaa7', '#00b894', '#fff'];
         const confettiCount = 100;
