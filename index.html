@@ -4,18 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>❤️ Angela ❤️</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- RESET --- */
+        html, body {
+            height: 100%; width: 100%;
+            margin: 0; padding: 0;
+            overflow: hidden;
+            background: #000;
+            background: radial-gradient(circle at center, #222 0%, #000 100%);
+            font-family: 'Segoe UI', sans-serif;
+            touch-action: none; 
+        }
+
+        /* --- TÍTULO --- */
+        .header {
+            position: absolute; top: 30px; left: 0; width: 100%; 
+            text-align: center; color: #fff; pointer-events: none; z-index: 1000;
+        }
+        .header h1 { margin: 0; font-size: 2rem; text-shadow: 0 0 10px #ff0055;}
+        .header p { font-size: 0.9rem; color: #aaa; margin: 5px 0 0 0; }
+
+        /* --- CONTENEDOR 3D --- */
+        #drag-container {
+            position: absolute; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        #spin-container {
+            position: relative;
+            width: 0; height: 0; 
+            transform-style: preserve-3d;
+            transform: rotateX(-10deg);
+        }
+
+        /* --- LAS FOTOS --- */
+        #spin-container img {
+            position: absolute;
+            width: 150px; height: 210px;
+            left: 50%; top: 50%;
+            margin-left: -75px;
+            margin-top: -105px;
+            transform-style: preserve-3d;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255,255,255,0.9);
+            border-radius: 8px;
+            -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
+            cursor: pointer;
+            transition: filter 0.3s, transform 0.3s;
+        }
+
+        #spin-container img:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 25px #ff0055;
+            border-color: #ff0055;
+            transform: scale(1.1);
+        }
+
+        /* --- BASE/SUELO --- */
+        #ground {
+            width: 900px; height: 900px;
+            position: absolute; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(90deg) translateZ(-150px); 
+            background: radial-gradient(center center, farthest-side, rgba(255, 0, 85, 0.15), transparent);
+        }
+
+        /* CORAZÓN CENTRO */
+        #spin-container p {
+            font-size: 80px;
+            position: absolute;
+            top: 100%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(90deg);
+            color: #ff0055; opacity: 0.5; margin: 0;
+            margin-top: 150px;
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            pointer-events: auto; /* IMPORTANTE para poder hacer click */
+        }
+        @keyframes pulse { 50% { opacity: 1; transform: translate(-50%, -50%) rotateX(90deg) scale(1.2); }}
+
+        /* --- CARTA / MENSAJE --- */
+        #card-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none; justify-content: center; align-items: center;
+            z-index: 3000;
+        }
+        .card {
+            background: #fff; padding: 30px; border-radius: 15px; text-align: center;
+            max-width: 80%; transform: scale(0); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card.active { transform: scale(1); }
+        .card h2 { color: #ff0055; font-family: 'Georgia', serif; margin: 0; }
+        .card p { font-size: 1.5rem; color: #333; margin: 15px 0; font-weight: bold; }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: flex;
+            justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 2000;
+        }
+        #lightbox.active { opacity: 1; pointer-events: all; }
+        #lightbox img { max-width: 90%; max-height: 85%; border: 4px solid #fff; border-radius: 8px; }
+        #close-btn { position: absolute; top: 30px; right: 30px; color: #fff; font-size: 50px; cursor: pointer; }
+
+        /* AJUSTE MOVIL RAPIDO */
+        @media (max-width: 768px) {
+            #spin-container img { width: 120px; height: 170px; margin-left: -60px; margin-top: -85px; }
+            .card p { font-size: 1.2rem; }
+        }
+    </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Feliz día mi Bb</h1>
-        <p>Desliza para girar</p>
+        <p>Desliza para girar • Toca el corazón</p>
     </div>
 
     <div id="drag-container">
         <div id="spin-container">
-            
             <img src="https://lh3.googleusercontent.com/pw/AP1GczNNj_WvZ964NT_LIs_qZuNa-f1XPTrsq0hU85G7nyiuJNZQPQYsUgwqI3BKoAiePfxLxaccurJsDYhhuFtbW9Fp85wJyhM-rWxzBRa1WzxmHgHFHGk1SdRlu-nli3bcgZBnIgvgkixFccV1Fa9_ulk=w513-h913-s-no-gm?w=600&q=80" alt="">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczM656vJ0sCrTdNV_4xiQF-goyvXz7dQ2qlAfoXtDIMgI_SScIFLmBDJGRHLzTKTA7tWiE8x1RiDv26zduGD176fZD4wMiL29XxEpsqyrjRoXbWDh7zOUJ8ON5CQtXKegNB2vhJFeTYMY9odMt_Yf7A=w514-h913-s-no-gm?w=600&q=80" alt="">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczNnk8NOQVmkGtd_NQLyYmb-AfSzFjLKBg6ognNEMcdrQWNedKCKB-8aicgWpkzNz_xvOcmFlUxZx18HnbWOhABQH3aDq_6kr4Eot1TaLPqq_oG_tInri-MXTKl65wACKhawR7UBhzT4MV7Ftnoz19g=w539-h913-s-no-gm?w=600&q=80" alt="">
@@ -24,16 +137,115 @@
             <img src="https://lh3.googleusercontent.com/pw/AP1GczM0RDu_u6nVtWAqTSmkYhaHDyx0Vutft3k8MYqXdvarf5qaDlHwKvT92_kT2KG_CSAoWKKN-UE8Wm4OHGzcnyDyBS8Y6lNd0H5GWkJpbsdTRF-_dsWgGvq--Uw2cE8bwhMS1w4alu3IsylUGOM_LMg=w685-h913-s-no-gm?w=600&q=80" alt="">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczM9hM-3gVHMCGWtMSkm47qhh3qLqeyw0cLM9keXGWAjeHgiJiN1tpTfFkLDsU11Ts6p6whnA1eNsR9p6M2p-Dklji4NjUlnlne-Kaxv0qfB4SZoLBeEP0BhV_uB36QneHwANTKoqqS8QKG_Uc2i6m0=w513-h913-s-no-gm?w=600&q=80" alt="">
             
-            <p>❤️</p>
+            <p id="heart">❤️</p>
         </div>
         <div id="ground"></div>
     </div>
 
+    <div id="card-modal">
+        <div class="card" id="card-content">
+            <h2>De: Mí para Ti</h2>
+            <p>Te amo Angela Kiram</p>
+            <span style="font-size: 40px;">❤️</span>
+        </div>
+    </div>
+
     <div id="lightbox">
-        <span id="close-btn">&times;</span>
+        <span id="close-btn">×</span>
         <img id="lightbox-img" src="">
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const radius = window.innerWidth < 768 ? 240 : 340;
+        const autoRotateSpeed = 0.5;
+        const ospin = document.getElementById('spin-container');
+        const aImg = ospin.getElementsByTagName('img');
+        const heart = document.getElementById('heart');
+        const cardModal = document.getElementById('card-modal');
+        const cardContent = document.getElementById('card-content');
+
+        // Inicializar posiciones 3D
+        function init(delayTime) {
+            for (let i = 0; i < aImg.length; i++) {
+                aImg[i].style.transform = `rotateY(${i * (360 / aImg.length)}deg) translateZ(${radius}px)`;
+                aImg[i].style.transition = "transform 1s";
+                aImg[i].style.transitionDelay = delayTime || (aImg.length - i) / 4 + "s";
+                
+                aImg[i].addEventListener('click', function(e) {
+                    if (Math.abs(desX) < 5) openLightbox(this.src);
+                });
+            }
+        }
+        init(0);
+
+        // --- FÍSICA DE GIRO ---
+        let desX = 0, desY = 0, tX = 0, tY = 0;
+        let autoSpin = true;
+
+        function animate() {
+            if(autoSpin) {
+                if (Math.abs(desX) > 0.5) {
+                    tY += desX * 0.5;
+                    desX *= 0.95;
+                } else {
+                    tY += autoRotateSpeed;
+                }
+            }
+            ospin.style.transform = `rotateX(${-10 - tX}deg) rotateY(${tY}deg)`;
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- CONTROLES ---
+        let sX, sY, nX, nY;
+        function startDrag(e) {
+            e = e || window.event;
+            sX = e.clientX || (e.touches && e.touches[0].clientX);
+            sY = e.clientY || (e.touches && e.touches[0].clientY);
+            autoSpin = false;
+        }
+
+        function moveDrag(e) {
+            if (autoSpin) return;
+            e = e || window.event;
+            nX = e.clientX || (e.touches && e.touches[0].clientX);
+            nY = e.clientY || (e.touches && e.touches[0].clientY);
+            desX = (nX - sX) * 0.2;
+            desY = (nY - sY) * 0.1;
+            tY += desX;
+            tX -= desY;
+            sX = nX; sY = nY;
+        }
+
+        document.onmousedown = document.ontouchstart = startDrag;
+        document.onmousemove = document.ontouchmove = moveDrag;
+        document.onmouseup = document.ontouchend = () => { autoSpin = true; };
+
+        // --- CLICK EN CORAZÓN (CARTA) ---
+        heart.onclick = (e) => {
+            e.stopPropagation();
+            cardModal.style.display = 'flex';
+            setTimeout(() => cardContent.classList.add('active'), 10);
+            autoSpin = false;
+        };
+
+        cardModal.onclick = () => {
+            cardContent.classList.remove('active');
+            setTimeout(() => { cardModal.style.display = 'none'; autoSpin = true; }, 400);
+        };
+
+        // --- LIGHTBOX ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+            autoSpin = false;
+        }
+        document.getElementById('close-btn').onclick = () => {
+            lightbox.classList.remove('active');
+            autoSpin = true;
+        };
+    </script>
 </body>
 </html>
