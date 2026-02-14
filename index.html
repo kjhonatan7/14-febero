@@ -16,6 +16,35 @@
             touch-action: none; 
         }
 
+        /* --- PANTALLA DE BLOQUEO --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.8s ease;
+        }
+        .login-box {
+            text-align: center; background: rgba(255, 255, 255, 0.05);
+            padding: 40px; border-radius: 20px; border: 1px solid #ff0055;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
+        }
+        .login-box h2 { color: #fff; margin-bottom: 20px; font-weight: 300; }
+        .login-box input {
+            padding: 12px; border-radius: 8px; border: none; outline: none;
+            width: 200px; text-align: center; font-size: 1.1rem;
+            margin-bottom: 20px; background: #eee;
+        }
+        .login-box button {
+            display: block; width: 100%; padding: 12px;
+            background: #ff0055; color: white; border: none;
+            border-radius: 8px; cursor: pointer; font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .login-box button:active { transform: scale(0.95); }
+
+        /* --- CONTENIDO PRINCIPAL (Oculto al inicio) --- */
+        #main-content { opacity: 0; transition: opacity 1s ease; }
+
         /* --- TÍTULO --- */
         .header {
             position: absolute; top: 30px; left: 0; width: 100%; 
@@ -26,90 +55,57 @@
 
         /* --- CONTENEDOR 3D --- */
         #drag-container {
-            position: absolute; 
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            perspective: 1000px;
-            transform-style: preserve-3d;
+            perspective: 1000px; transform-style: preserve-3d;
         }
-
         #spin-container {
-            position: relative;
-            width: 0; height: 0; 
-            transform-style: preserve-3d;
-            transform: rotateX(-10deg);
+            position: relative; width: 0; height: 0; 
+            transform-style: preserve-3d; transform: rotateX(-10deg);
         }
-
         #spin-container img {
-            position: absolute;
-            width: 150px; height: 210px;
-            left: 50%; top: 50%;
-            margin-left: -75px; margin-top: -105px;
-            transform-style: preserve-3d;
-            object-fit: cover;
+            position: absolute; width: 150px; height: 210px;
+            left: 50%; top: 50%; margin-left: -75px; margin-top: -105px;
+            transform-style: preserve-3d; object-fit: cover;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            border: 3px solid rgba(255,255,255,0.9);
-            border-radius: 8px;
+            border: 3px solid rgba(255,255,255,0.9); border-radius: 8px;
             -webkit-box-reflect: below 10px linear-gradient(transparent, transparent, #0005);
             cursor: pointer;
         }
-
         #ground {
-            width: 900px; height: 900px;
-            position: absolute; top: 50%; left: 50%;
+            width: 900px; height: 900px; position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%) rotateX(90deg) translateZ(-150px); 
             background: radial-gradient(center center, farthest-side, rgba(255, 0, 85, 0.15), transparent);
         }
-
         #heart-trigger {
-            font-size: 80px;
-            position: absolute;
-            top: 100%; left: 50%;
+            font-size: 80px; position: absolute; top: 100%; left: 50%;
             transform: translate(-50%, -50%) rotateX(90deg);
             color: #ff0055; opacity: 0.5; margin: 150px 0 0 0;
-            animation: pulse 2s infinite;
-            cursor: pointer;
-            pointer-events: auto;
+            animation: pulse 2s infinite; cursor: pointer; pointer-events: auto;
         }
         @keyframes pulse { 50% { opacity: 1; transform: translate(-50%, -50%) rotateX(90deg) scale(1.2); }}
 
-        /* --- CARTA Y CORAZONES FLOTANTES --- */
+        /* --- CARTA Y CORAZONES --- */
         #letter-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: none; justify-content: center; align-items: center;
-            z-index: 5000; overflow: hidden;
+            background: rgba(0,0,0,0.85); display: none;
+            justify-content: center; align-items: center; z-index: 5000; overflow: hidden;
         }
-
         .letter-card {
-            background: #fff;
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 50px rgba(255, 0, 85, 0.5);
-            transform: scale(0);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 5002;
-            max-width: 85%;
+            background: #fff; padding: 40px 30px; border-radius: 20px; text-align: center;
+            position: relative; box-shadow: 0 0 50px rgba(255, 0, 85, 0.5);
+            transform: scale(0); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5002; max-width: 85%;
         }
         .letter-card.open { transform: scale(1); }
-        .letter-card h2 { color: #ff0055; margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; }
         .letter-card p { font-size: 1.8rem; color: #333; margin: 20px 0; font-weight: bold; font-family: 'Georgia', serif; }
 
-        /* Estilo corazones de fondo */
         .bg-heart {
-            position: absolute;
-            color: #ff0055;
-            user-select: none;
-            pointer-events: none;
-            z-index: 5001;
-            animation: floatUp linear forwards;
-            filter: drop-shadow(0 0 5px rgba(255, 0, 85, 0.3));
+            position: absolute; color: #ff0055; user-select: none; pointer-events: none;
+            z-index: 5001; animation: floatUp linear forwards;
         }
         @keyframes floatUp {
             0% { transform: translateY(110vh) scale(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 1; }
             100% { transform: translateY(-20vh) scale(1.5) rotate(360deg); opacity: 0; }
         }
 
@@ -132,40 +128,69 @@
 </head>
 <body>
 
-    <div class="header">
-        <h1>Feliz día mi BB</h1>
-        <p>Desliza para girar • Toca el corazón</p>
-    </div>
-
-    <div id="drag-container">
-        <div id="spin-container">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczNNj_WvZ964NT_LIs_qZuNa-f1XPTrsq0hU85G7nyiuJNZQPQYsUgwqI3BKoAiePfxLxaccurJsDYhhuFtbW9Fp85wJyhM-rWxzBRa1WzxmHgHFHGk1SdRlu-nli3bcgZBnIgvgkixFccV1Fa9_ulk=w513-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczM656vJ0sCrTdNV_4xiQF-goyvXz7dQ2qlAfoXtDIMgI_SScIFLmBDJGRHLzTKTA7tWiE8x1RiDv26zduGD176fZD4wMiL29XxEpsqyrjRoXbWDh7zOUJ8ON5CQtXKegNB2vhJFeTYMY9odMt_Yf7A=w514-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczNnk8NOQVmkGtd_NQLyYmb-AfSzFjLKBg6ognNEMcdrQWNedKCKB-8aicgWpkzNz_xvOcmFlUxZx18HnbWOhABQH3aDq_6kr4Eot1TaLPqq_oG_tInri-MXTKl65wACKhawR7UBhzT4MV7Ftnoz19g=w539-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczP6An5jwySr8ziQ7VQ7M2QzLDdiXF9t_Y1WJjItx9285RDJMeynumGk04SAHbkth2JD3Xilkr7KJm1jk9mQummqvqr2_x-a7Hc-IQbWFQueJAdrdhLV_aQpsCyeiQv_PDpK4V-MuTJjq8lUfkHKUPI=w515-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczNOo_0yeN45hbs8x-cThatBdDgfAIwcxKSG4R8Oa-qbFQxQOfZOxxC0vH6vKd59tpm76P3f-eDBJ56VLI1VXvzACpEdDJyO0xNlbkY6FaAzAEr7TtaPl3RuIlr2UMpZYNdo5muCYn4ykgekrZ1l4uI=w513-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczM0RDu_u6nVtWAqTSmkYhaHDyx0Vutft3k8MYqXdvarf5qaDlHwKvT92_kT2KG_CSAoWKKN-UE8Wm4OHGzcnyDyBS8Y6lNd0H5GWkJpbsdTRF-_dsWgGvq--Uw2cE8bwhMS1w4alu3IsylUGOM_LMg=w685-h913-s-no-gm?w=600&q=80" alt="">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczM9hM-3gVHMCGWtMSkm47qhh3qLqeyw0cLM9keXGWAjeHgiJiN1tpTfFkLDsU11Ts6p6whnA1eNsR9p6M2p-Dklji4NjUlnlne-Kaxv0qfB4SZoLBeEP0BhV_uB36QneHwANTKoqqS8QKG_Uc2i6m0=w513-h913-s-no-gm?w=600&q=80" alt="">
-            
-            <p id="heart-trigger">❤️</p>
-        </div>
-        <div id="ground"></div>
-    </div>
-
-    <div id="letter-overlay">
-        <div class="letter-card" id="letter-card">
-            <h2>Feliz día</h2>
-            <p>Te amo Angela Kiram</p>
-            <div style="font-size: 40px;">❤️</div>
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Ingresa el Código</h2>
+            <input type="text" id="pass-input" placeholder="Escribe aquí...">
+            <button onclick="checkPass()">Entrar</button>
         </div>
     </div>
 
-    <div id="lightbox">
-        <span id="close-btn">×</span>
-        <img id="lightbox-img" src="">
+    <div id="main-content">
+        <div class="header">
+            <h1>Feliz día mi Bb</h1>
+            <p>Desliza para girar • Toca el corazón</p>
+        </div>
+
+        <div id="drag-container">
+            <div id="spin-container">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczNNj_WvZ964NT_LIs_qZuNa-f1XPTrsq0hU85G7nyiuJNZQPQYsUgwqI3BKoAiePfxLxaccurJsDYhhuFtbW9Fp85wJyhM-rWxzBRa1WzxmHgHFHGk1SdRlu-nli3bcgZBnIgvgkixFccV1Fa9_ulk=w513-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczM656vJ0sCrTdNV_4xiQF-goyvXz7dQ2qlAfoXtDIMgI_SScIFLmBDJGRHLzTKTA7tWiE8x1RiDv26zduGD176fZD4wMiL29XxEpsqyrjRoXbWDh7zOUJ8ON5CQtXKegNB2vhJFeTYMY9odMt_Yf7A=w514-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczNnk8NOQVmkGtd_NQLyYmb-AfSzFjLKBg6ognNEMcdrQWNedKCKB-8aicgWpkzNz_xvOcmFlUxZx18HnbWOhABQH3aDq_6kr4Eot1TaLPqq_oG_tInri-MXTKl65wACKhawR7UBhzT4MV7Ftnoz19g=w539-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczP6An5jwySr8ziQ7VQ7M2QzLDdiXF9t_Y1WJjItx9285RDJMeynumGk04SAHbkth2JD3Xilkr7KJm1jk9mQummqvqr2_x-a7Hc-IQbWFQueJAdrdhLV_aQpsCyeiQv_PDpK4V-MuTJjq8lUfkHKUPI=w515-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczNOo_0yeN45hbs8x-cThatBdDgfAIwcxKSG4R8Oa-qbFQxQOfZOxxC0vH6vKd59tpm76P3f-eDBJ56VLI1VXvzACpEdDJyO0xNlbkY6FaAzAEr7TtaPl3RuIlr2UMpZYNdo5muCYn4ykgekrZ1l4uI=w513-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczM0RDu_u6nVtWAqTSmkYhaHDyx0Vutft3k8MYqXdvarf5qaDlHwKvT92_kT2KG_CSAoWKKN-UE8Wm4OHGzcnyDyBS8Y6lNd0H5GWkJpbsdTRF-_dsWgGvq--Uw2cE8bwhMS1w4alu3IsylUGOM_LMg=w685-h913-s-no-gm?w=600&q=80" alt="">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczM9hM-3gVHMCGWtMSkm47qhh3qLqeyw0cLM9keXGWAjeHgiJiN1tpTfFkLDsU11Ts6p6whnA1eNsR9p6M2p-Dklji4NjUlnlne-Kaxv0qfB4SZoLBeEP0BhV_uB36QneHwANTKoqqS8QKG_Uc2i6m0=w513-h913-s-no-gm?w=600&q=80" alt="">
+                <p id="heart-trigger">❤️</p>
+            </div>
+            <div id="ground"></div>
+        </div>
+
+        <div id="letter-overlay">
+            <div class="letter-card" id="letter-card">
+                <h2>Mensaje para Angela</h2>
+                <p>Te amo Angela Kiram</p>
+                <div style="font-size: 40px;">❤️</div>
+            </div>
+        </div>
+
+        <div id="lightbox">
+            <span id="close-btn">×</span>
+            <img id="lightbox-img" src="">
+        </div>
     </div>
 
     <script>
+        const CODIGO_CORRECTO = "250125"; // <--- PUEDES CAMBIAR EL CÓDIGO AQUÍ
+
+        function checkPass() {
+            const input = document.getElementById('pass-input').value;
+            if (input.toUpperCase() === CODIGO_CORRECTO) {
+                const login = document.getElementById('login-screen');
+                const content = document.getElementById('main-content');
+                
+                login.style.opacity = '0';
+                setTimeout(() => {
+                    login.style.display = 'none';
+                    content.style.opacity = '1';
+                    init(); // Inicializar carrusel
+                    animate(); // Empezar animación
+                }, 800);
+            } else {
+                alert("Código incorrecto, intenta de nuevo ❤️");
+            }
+        }
+
         const radius = window.innerWidth < 768 ? 240 : 340;
         const autoRotateSpeed = 0.5;
         const ospin = document.getElementById('spin-container');
@@ -182,7 +207,6 @@
                 };
             }
         }
-        setTimeout(init, 100);
 
         let desX = 0, desY = 0, tX = 0, tY = 0;
         let autoSpin = true;
@@ -199,8 +223,8 @@
             ospin.style.transform = `rotateX(${-10 - tX}deg) rotateY(${tY}deg)`;
             requestAnimationFrame(animate);
         }
-        animate();
 
+        // --- CONTROLES ---
         let sX, sY;
         function startDrag(e) {
             autoSpin = false;
@@ -222,29 +246,19 @@
 
         // --- LÓGICA DE CORAZONES ---
         let heartInterval;
-
         document.getElementById('heart-trigger').onclick = (e) => {
             e.stopPropagation();
             overlay.style.display = 'flex';
             setTimeout(() => lCard.classList.add('open'), 50);
             autoSpin = false;
-
-            // EXPLOSIÓN INICIAL: Crea 15 corazones de golpe
-            for(let i=0; i<15; i++) {
-                setTimeout(createFloatingHeart, i * 50);
-            }
-
-            // FLUJO CONSTANTE
+            for(let i=0; i<15; i++) setTimeout(createFloatingHeart, i * 50);
             heartInterval = setInterval(createFloatingHeart, 200);
         };
 
         overlay.onclick = () => {
             lCard.classList.remove('open');
             clearInterval(heartInterval);
-            setTimeout(() => { 
-                overlay.style.display = 'none'; 
-                autoSpin = true;
-            }, 500);
+            setTimeout(() => { overlay.style.display = 'none'; autoSpin = true; }, 500);
         };
 
         function createFloatingHeart() {
@@ -252,12 +266,9 @@
             h.classList.add('bg-heart');
             h.innerHTML = '❤️';
             h.style.left = Math.random() * 100 + 'vw';
-            // Variación de tamaño y velocidad
             const duration = (Math.random() * 2 + 2);
             h.style.animationDuration = duration + 's';
             h.style.fontSize = (Math.random() * 30 + 15) + 'px';
-            h.style.opacity = Math.random() * 0.5 + 0.5;
-            
             overlay.appendChild(h);
             setTimeout(() => h.remove(), duration * 1000);
         }
