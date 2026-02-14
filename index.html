@@ -76,7 +76,7 @@
         /* --- CARTA Y CORAZONES FLOTANTES --- */
         #letter-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             display: none; justify-content: center; align-items: center;
             z-index: 5000; overflow: hidden;
         }
@@ -87,30 +87,30 @@
             border-radius: 20px;
             text-align: center;
             position: relative;
-            box-shadow: 0 0 50px rgba(255, 0, 85, 0.4);
+            box-shadow: 0 0 50px rgba(255, 0, 85, 0.5);
             transform: scale(0);
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 5002;
-            max-width: 80%;
+            max-width: 85%;
         }
         .letter-card.open { transform: scale(1); }
-        .letter-card h2 { color: #ff0055; margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
+        .letter-card h2 { color: #ff0055; margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; }
         .letter-card p { font-size: 1.8rem; color: #333; margin: 20px 0; font-weight: bold; font-family: 'Georgia', serif; }
 
         /* Estilo corazones de fondo */
         .bg-heart {
             position: absolute;
             color: #ff0055;
-            font-size: 20px;
             user-select: none;
             pointer-events: none;
             z-index: 5001;
             animation: floatUp linear forwards;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 85, 0.3));
         }
         @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+            0% { transform: translateY(110vh) scale(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1.5) rotate(360deg); opacity: 0; }
         }
 
         /* --- LIGHTBOX --- */
@@ -126,7 +126,7 @@
 
         @media (max-width: 768px) {
             #spin-container img { width: 120px; height: 170px; margin-left: -60px; margin-top: -85px; }
-            .letter-card p { font-size: 1.4rem; }
+            .letter-card p { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -154,9 +154,9 @@
 
     <div id="letter-overlay">
         <div class="letter-card" id="letter-card">
-            <h2>Feliz día</h2>
+            <h2>Mensaje para Angela</h2>
             <p>Te amo Angela Kiram</p>
-            <div style="font-size: 30px;">❤️</div>
+            <div style="font-size: 40px;">❤️</div>
         </div>
     </div>
 
@@ -173,7 +173,6 @@
         const overlay = document.getElementById('letter-overlay');
         const lCard = document.getElementById('letter-card');
 
-        // Inicializar
         function init() {
             for (let i = 0; i < aImg.length; i++) {
                 aImg[i].style.transform = `rotateY(${i * (360 / aImg.length)}deg) translateZ(${radius}px)`;
@@ -185,7 +184,6 @@
         }
         setTimeout(init, 100);
 
-        // Giro y Física
         let desX = 0, desY = 0, tX = 0, tY = 0;
         let autoSpin = true;
 
@@ -203,7 +201,6 @@
         }
         animate();
 
-        // Controles Táctiles/Mouse
         let sX, sY;
         function startDrag(e) {
             autoSpin = false;
@@ -223,7 +220,7 @@
         document.onmousemove = document.ontouchmove = moveDrag;
         document.onmouseup = document.ontouchend = () => { autoSpin = true; };
 
-        // --- LÓGICA DE LA CARTA Y CORAZONES ---
+        // --- LÓGICA DE CORAZONES ---
         let heartInterval;
 
         document.getElementById('heart-trigger').onclick = (e) => {
@@ -232,8 +229,13 @@
             setTimeout(() => lCard.classList.add('open'), 50);
             autoSpin = false;
 
-            // Empezar a crear corazones
-            heartInterval = setInterval(createFloatingHeart, 300);
+            // EXPLOSIÓN INICIAL: Crea 15 corazones de golpe
+            for(let i=0; i<15; i++) {
+                setTimeout(createFloatingHeart, i * 50);
+            }
+
+            // FLUJO CONSTANTE
+            heartInterval = setInterval(createFloatingHeart, 200);
         };
 
         overlay.onclick = () => {
@@ -250,15 +252,16 @@
             h.classList.add('bg-heart');
             h.innerHTML = '❤️';
             h.style.left = Math.random() * 100 + 'vw';
-            h.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            h.style.fontSize = (Math.random() * 20 + 20) + 'px';
-            overlay.appendChild(h);
+            // Variación de tamaño y velocidad
+            const duration = (Math.random() * 2 + 2);
+            h.style.animationDuration = duration + 's';
+            h.style.fontSize = (Math.random() * 30 + 15) + 'px';
+            h.style.opacity = Math.random() * 0.5 + 0.5;
             
-            // Limpiar el DOM cuando termine la animación
-            setTimeout(() => h.remove(), 5000);
+            overlay.appendChild(h);
+            setTimeout(() => h.remove(), duration * 1000);
         }
 
-        // --- LIGHTBOX ---
         function openLightbox(src) {
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').classList.add('active');
